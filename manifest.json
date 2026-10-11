@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "SIB-SEP",
+  "version": "1.0.0",
+  "description": "Sibling Setup for Brand-viewer — automates sibling group creation on Dropy Brand Viewer (localhost:8899).",
+  "permissions": ["storage", "tabs", "scripting", "alarms"],
+  "host_permissions": ["http://localhost:8899/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SIB-SEP"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:8899/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

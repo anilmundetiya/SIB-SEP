@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIB-SEP</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="mark">
+      <div class="mark-dot" id="markDot"></div>
+      <div>
+        <div class="mark-title">SIB-SEP</div>
+        <div class="mark-sub">Sibling Setup for Brand-viewer</div>
+      </div>
+    </div>
+    <div class="status-pill" id="statusPill" data-state="idle">Idle</div>
+    <button class="popout-btn" id="popOutBtn" title="Pop out to resizable window">↗</button>
+  </header>
+
+  <!-- Resume banner (conditional) -->
+  <section class="resume-banner" id="resumeBanner" hidden>
+    <div class="resume-icon">↻</div>
+    <div class="resume-body">
+      <div class="resume-title">Previous run interrupted</div>
+      <div class="resume-info" id="resumeInfo"></div>
+    </div>
+    <div class="resume-actions">
+      <button id="resumeBtn" class="btn btn-primary">Resume</button>
+      <button id="freshBtn" class="btn btn-ghost">Discard</button>
+    </div>
+  </section>
+
+  <!-- Hero: Progress -->
+  <section class="hero">
+    <div class="hero-row">
+      <div class="hero-stat">
+        <div class="hero-num" id="asinsProcessedNum">0</div>
+        <div class="hero-num-total">of <span id="asinsTotalNum">0</span> ASINs</div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-mini">
+          <span class="hero-mini-label">Files</span>
+          <span class="hero-mini-val" id="filesStat">0 / 0</span>
+        </div>
+        <div class="hero-mini">
+          <span class="hero-mini-label">Groups</span>
+          <span class="hero-mini-val" id="groupsStat">0 / 0</span>
+        </div>
+        <div class="hero-mini">
+          <span class="hero-mini-label">Failed</span>
+          <span class="hero-mini-val hero-mini-fail" id="failedStat">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="current-line">
+      <div class="current-item">
+        <span class="current-label">File</span>
+        <span class="current-val" id="currentFile" title="—">—</span>
+      </div>
+      <div class="current-item">
+        <span class="current-label">Group</span>
+        <span class="current-val" id="currentGroup">—</span>
+      </div>
+      <div class="current-item">
+        <span class="current-label">Last ASIN</span>
+        <span class="current-val mono" id="lastAsin">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="controls">
+    <button id="startBtn" class="btn btn-primary">
+      <span class="btn-icon">▶</span> Start
+    </button>
+    <button id="pauseBtn" class="btn btn-secondary" disabled>
+      <span class="btn-icon">❚❚</span> Pause
+    </button>
+    <button id="stopBtn" class="btn btn-danger" disabled>
+      <span class="btn-icon">■</span> Stop
+    </button>
+  </section>
+
+  <!-- Files -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Files</h2>
+      <div class="panel-actions">
+        <button id="clearFilesBtn" class="btn-mini">Clear all</button>
+      </div>
+    </div>
+    <label class="drop-zone" id="dropZone" for="fileInput">
+      <div class="drop-icon-wrap">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      </div>
+      <div class="drop-text">
+        <div class="drop-main">Drop CSV / XLSX here</div>
+        <div class="drop-sub">or click to browse — columns: <code>GroupID, ASIN, Label</code></div>
+      </div>
+      <input type="file" id="fileInput" multiple accept=".csv,.xlsx" hidden>
+    </label>
+    <div class="file-list" id="fileList"></div>
+  </section>
+
+  <!-- Live activity log -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Activity</h2>
+      <div class="panel-actions">
+        <label class="check-inline">
+          <input type="checkbox" id="autoScrollToggle" checked>
+          Auto-scroll
+        </label>
+        <button id="copyLogsBtn" class="btn-mini">Copy</button>
+        <button id="clearLogsBtn" class="btn-mini">Clear</button>
+      </div>
+    </div>
+    <div class="log-window" id="logWindow">
+      <div class="log-empty">No activity yet.</div>
+    </div>
+  </section>
+
+  <!-- Failed groups -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Failed groups <span class="panel-count" id="failedCount">0</span></h2>
+      <div class="panel-actions">
+        <button id="retryFailedBtn" class="btn-mini" disabled>Retry all</button>
+        <button id="copyFailedBtn" class="btn-mini">Copy CSV</button>
+        <button id="clearFailedBtn" class="btn-mini">Clear</button>
+      </div>
+    </div>
+    <div class="failed-list" id="failedList">
+      <div class="log-empty">No failures.</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Brand Viewer target: <code>http://localhost:8899</code></span>
+  </footer>
+
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
